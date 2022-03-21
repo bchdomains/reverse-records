@@ -4,7 +4,7 @@
 ## How to setup
 
 ```
-git clone https://github.com/ensdomains/reverse-records
+git clone https://github.com/bchdomains/reverse-records
 cd reverse-records
 cp env.example .env // Add your mnemonic, infura project id, and etherscan key
 yarn
@@ -41,3 +41,5 @@ const validNames = allnames.filter((n) => namehash.normalize(n) === n )
 - Rinkeby: [0x196eC7109e127A353B709a20da25052617295F6f](https://rinkeby.etherscan.io/address/0x196eC7109e127A353B709a20da25052617295F6f)
 - Goerli: [0x333Fc8f550043f239a2CF79aEd5e9cF4A20Eb41e](https://goerli.etherscan.io/address/0x333Fc8f550043f239a2CF79aEd5e9cF4A20Eb41e)
 - Mainnet: [0x3671aE578E63FdF66ad4F3E12CC0c0d71Ac7510C](https://etherscan.io/address/0x3671aE578E63FdF66ad4F3E12CC0c0d71Ac7510C)
+- SmartBCH: [0x67F0DD63065675830cba1f3CDb74390f4d5251E1](https://smartscan.cash/address/0x67F0DD63065675830cba1f3CDb74390f4d5251E1)
+- SmartBCH Amber: [0xAA5BFa3011E4857ba6C25e841e01504c79268f54](https://smartscan.cash/address/0xAA5BFa3011E4857ba6C25e841e01504c79268f54

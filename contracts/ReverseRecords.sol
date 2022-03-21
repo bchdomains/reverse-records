@@ -1,9 +1,8 @@
-pragma solidity ^0.7.4;pragma experimental ABIEncoderV2;
+pragma solidity ^0.8.4;pragma experimental ABIEncoderV2;
 import "./Namehash.sol";
-import '@ensdomains/ens/contracts/ENS.sol';
-import '@ensdomains/ens/contracts/ReverseRegistrar.sol';
-import '@ensdomains/resolver/contracts/Resolver.sol';
-
+import '@bchdomains/lns-contracts/contracts/registry/ENS.sol';
+import '@bchdomains/lns-contracts/contracts/registry/ReverseRegistrar.sol';
+import '@bchdomains/lns-contracts/contracts/resolvers/Resolver.sol';
 contract ReverseRecords {
     ENS ens;
     ReverseRegistrar registrar;
@@ -53,14 +52,14 @@ contract ReverseRecords {
         addr;
         ret; // Stop warning us about unused variables
         assembly {
-            let lookup := 0x3031323334353637383961626364656600000000000000000000000000000000
+            let _lookup := 0x3031323334353637383961626364656600000000000000000000000000000000
 
             for { let i := 40 } gt(i, 0) { } {
                 i := sub(i, 1)
-                mstore8(i, byte(and(addr, 0xf), lookup))
+                mstore8(i, byte(and(addr, 0xf), _lookup))
                 addr := div(addr, 0x10)
                 i := sub(i, 1)
-                mstore8(i, byte(and(addr, 0xf), lookup))
+                mstore8(i, byte(and(addr, 0xf), _lookup))
                 addr := div(addr, 0x10)
             }
 

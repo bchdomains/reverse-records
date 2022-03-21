@@ -1,7 +1,7 @@
 {
-  "name": "@ensdomains/reverse-records",
+  "name": "@bchdomains/reverse-records",
   "version": "1.0.0",
-  "description": "Returns multiple ENS reverse records with forward lookup check",
+  "description": "Returns multiple LNS reverse records with forward lookup check",
   "main": "index.js",
   "scripts": {
     "test": "hardhat test",
@@ -17,8 +17,18 @@
     "deploy:mainnet": "npx hardhat run --network mainnet scripts/deploy.js",
     "verify:mainnet": "npx hardhat verify --network mainnet 0x3671aE578E63FdF66ad4F3E12CC0c0d71Ac7510C '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e'",
     "query:mainnet": "npx hardhat names --network mainnet --addresses",
-    "test:mainnet": "npx hardhat run --network mainnet scripts/real_data_test.js"
+    "test:mainnet": "npx hardhat run --network mainnet scripts/real_data_test.js",
+    "build": "npx hardhat compile",
+    "prepublishOnly": "yarn build",
+    "pub": "yarn publish --access public"
   },
+  "files": [
+    "build/contracts/*json",
+    "contracts/**/*.sol",
+    "artifacts/contracts/**/*.json",
+    "deployments/smartbch/*.json",
+    "deployments/smartbch-amber/*.json"
+  ],
   "keywords": [],
   "author": "Makoto Inoue",
   "license": "ISC",
@@ -30,9 +40,12 @@
     "ethereum-waffle": "^3.3.0",
     "ethers": "^5.0.31",
     "graphql": "^15.5.0",
-    "hardhat": "^2.0.11"
+    "hardhat": "^2.0.11",
+    "hardhat-dependency-compiler": "^1.1.2",
+    "hardhat-deploy": "^0.11.0"
   },
   "dependencies": {
+    "@bchdomains/lns-contracts": "^0.0.10",
     "@ensdomains/buffer": "^0.0.10",
     "@ensdomains/dnssec-oracle": "^0.2.0",
     "@ensdomains/ens": "^0.5.0",

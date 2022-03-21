@@ -1,7 +1,7 @@
 require("@nomiclabs/hardhat-waffle");
-require('@ensdomains/ens');
-require('@ensdomains/resolver');
 require("@nomiclabs/hardhat-etherscan");
+require('hardhat-dependency-compiler');
+require('hardhat-deploy')
 const dotenv = require("dotenv")
 dotenv.config()
 
@@ -9,7 +9,9 @@ const CONTRACTS = {
   'ropsten': '0x5bBFe410e18DCcaebbf5fD7A00844d4255615258',
   'rinkeby': '0x196eC7109e127A353B709a20da25052617295F6f',
   'goerli': '0x333Fc8f550043f239a2CF79aEd5e9cF4A20Eb41e',
-  'mainnet': '0x3671aE578E63FdF66ad4F3E12CC0c0d71Ac7510C'
+  'mainnet': '0x3671aE578E63FdF66ad4F3E12CC0c0d71Ac7510C',
+  'smartbch': '0x67F0DD63065675830cba1f3CDb74390f4d5251E1',
+  'smartbch-amber': '0xAA5BFa3011E4857ba6C25e841e01504c79268f54'
 }
 
 const {
@@ -27,6 +29,11 @@ task("names", "query reverse records")
   });
 
 module.exports = {
+  namedAccounts: {
+    mnemonic: {
+      default: 0,
+    },
+  },
   networks: {
     localhost: {
       url: "http://127.0.0.1:8545"
@@ -56,7 +63,30 @@ module.exports = {
       chainId: 1,
       gasPrice: 120000000000, // 120 gwei
       accounts: {mnemonic: MNEMONIC}
-    }
+    },
+    smartbch: {
+      url: "https://smartbch.fountainhead.cash/mainnet",
+      chainId: 10000,
+      live: true,
+      saveDeployments: true,
+      gasPrice: 1046739556,
+      accounts: {mnemonic: MNEMONIC}
+    },
+    "smartbch-amber": {
+      url: "http://moeing.tech:8545",
+      chainId: 10001,
+      live: true,
+      saveDeployments: true,
+      tags: ["staging"],
+      gasPrice: 1046739556,
+      accounts: {mnemonic: MNEMONIC}
+    },
+    hardhat: {
+      live: false,
+      saveDeployments: false,
+      tags: ["test", "local"],
+      accounts: [{privateKey: MNEMONIC, balance: "12000000000000"}]
+    },
   },
   etherscan: {
     apiKey: ETHERSCANKEY
@@ -64,8 +94,15 @@ module.exports = {
   solidity: {
     compilers: [
       {
-        version: "0.7.4"
+        version: "0.8.4"
       }
     ]
+  },
+  dependencyCompiler: {
+    paths: [
+      '@bchdomains/lns-contracts/contracts/resolvers/mocks/DummyNameWrapper.sol',
+      '@bchdomains/lns-contracts/contracts/resolvers/SmartBchPublicResolver.sol',
+      '@bchdomains/lns-contracts/contracts/registry/ENSRegistry.sol',
+    ],
   }
 }

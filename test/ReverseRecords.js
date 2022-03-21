@@ -28,14 +28,16 @@ describe("ReverseRecords contract", function() {
       ethNode = namehash.hash('eth')
       node = namehash.hash(owner.address.slice(2).toLowerCase() + ".addr.reverse");
       const ENSRegistry = await ethers.getContractFactory("ENSRegistry");
-      const PublicResolver = await ethers.getContractFactory("PublicResolver");
+      const NameWrapper = await ethers.getContractFactory('DummyNameWrapper');
+      const PublicResolver = await ethers.getContractFactory("SmartBchPublicResolver");
       const ReverseRegistrar = await ethers.getContractFactory("ReverseRegistrar");
       ens = await ENSRegistry.deploy();
-      resolver = await PublicResolver.deploy(ens.address);
+      const nameWrapper = await NameWrapper.deploy();
+      resolver = await PublicResolver.deploy(ens.address, nameWrapper.address);
       registrar = await ReverseRegistrar.deploy(ens.address, resolver.address);
       await ens.setSubnodeOwner(namehash.hash(''), sha3('eth'), owner.address);
       await ens.setSubnodeOwner(namehash.hash(''), sha3('reverse'), owner.address);
-    　await ens.setSubnodeOwner(namehash.hash('reverse'), sha3('addr'), registrar.address);
+      await ens.setSubnodeOwner(namehash.hash('reverse'), sha3('addr'), registrar.address);
     })
         
     it("Reverse record", async function() {
