@@ -70,7 +70,7 @@ module.exports = {
       live: true,
       saveDeployments: true,
       gasPrice: 1046739556,
-      accounts: {mnemonic: MNEMONIC}
+      accounts: [MNEMONIC]
     },
     "smartbch-amber": {
       url: "http://moeing.tech:8545",
@@ -79,7 +79,7 @@ module.exports = {
       saveDeployments: true,
       tags: ["staging"],
       gasPrice: 1046739556,
-      accounts: {mnemonic: MNEMONIC}
+      accounts: [MNEMONIC]
     },
     hardhat: {
       live: false,
