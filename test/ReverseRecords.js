@@ -1,5 +1,6 @@
 const { expect } = require("chai");
 const namehash = require('eth-ens-namehash');
+const { formatsByName, formatsByCoinType } = require('@bchdomains/address-encoder');
 
 function sha3(name){
   return ethers.utils.keccak256(ethers.utils.toUtf8Bytes(name))
@@ -10,10 +11,10 @@ async function assertReverseRecord(ens, address){
   let reverseResolverAddress, reverseResolver, reverseRecord, forwardResolverAddress, forwardResolver, forwardAddress
   try{
     reverseResolverAddress = await ens.resolver(namehash.hash(reverseNode))
-    reverseResolver = await ethers.getContractAt('PublicResolver', reverseResolverAddress)
+    reverseResolver = await ethers.getContractAt('SmartBchPublicResolver', reverseResolverAddress)
     reverseRecord = await reverseResolver.name(namehash.hash(reverseNode))
     forwardResolverAddress = await ens.resolver(namehash.hash(reverseRecord))  
-    forwardResolver = await ethers.getContractAt('PublicResolver', forwardResolverAddress)
+    forwardResolver = await ethers.getContractAt('SmartBchPublicResolver', forwardResolverAddress)
     forwardAddress = await forwardResolver['addr(bytes32)'](namehash.hash(reverseRecord))  
   }catch(e){
     // console.log(e)
@@ -49,8 +50,8 @@ describe("ReverseRecords contract", function() {
       // fAddr: set empty string to reverse record
       // gAddr: correct
       const [owner, aAddr, bAddr, cAddr, dAddr, eAddr, fAddr, gAddr] = await ethers.getSigners();
-      const PublicResolver = await ethers.getContractFactory("PublicResolver");
-      const resolverArtifact = await hre.artifacts.readArtifact("PublicResolver")
+      const PublicResolver = await ethers.getContractFactory("SmartBchPublicResolver");
+      const resolverArtifact = await hre.artifacts.readArtifact("SmartBchPublicResolver")
       await ens.setSubnodeOwner(namehash.hash('eth'), sha3('a'), aAddr.address);
       await ens.setSubnodeOwner(namehash.hash('eth'), sha3('b'), bAddr.address);
       // No c
@@ -110,5 +111,15 @@ describe("ReverseRecords contract", function() {
       expect(results[5]).to.equal('');
       expect(await assertReverseRecord(ens, gAddr.address)).to.be.true
       expect(results[6]).to.equal('g.eth');
+
+
+      const COIN_TYPE_BCH = 145;
+      const data = formatsByName['BCH'].decoder('1SmartBCHBurnAddressxxxxxxy31qJGb');
+      await await resolver.connect(aAddr)['setAddr(bytes32,uint256,bytes)'](namehash.hash('a.eth'), COIN_TYPE_BCH, data);
+      const addrs = await reverseRecords.getAddrs(['a.eth', 'b.eth'], COIN_TYPE_BCH);
+      expect(addrs[0]).equals(`0x${data.toString('hex')}`);
+      expect(addrs[1]).equals("0x");
+      const addr = formatsByCoinType[COIN_TYPE_BCH].encoder(Buffer.from(addrs[0].substr(2), "hex"));
+      expect(addr).equal("bitcoincash:qqzdl8vlah353f0cyvmuapag9xlzyq9w6cul36akp5");
     });
 });

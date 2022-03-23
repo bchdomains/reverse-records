@@ -85,7 +85,7 @@ module.exports = {
       live: false,
       saveDeployments: false,
       tags: ["test", "local"],
-      accounts: [{privateKey: MNEMONIC, balance: "12000000000000"}]
+      // accounts: [{privateKey: MNEMONIC, balance: "1200000000000000000"}]
     },
   },
   etherscan: {

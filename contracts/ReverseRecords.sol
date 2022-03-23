@@ -22,11 +22,11 @@ contract ReverseRecords {
     function getNames(address[] calldata addresses) external view returns (string[] memory r) {
         r = new string[](addresses.length);
         for(uint i = 0; i < addresses.length; i++) {
-            bytes32 node = node(addresses[i]);
-            address resolverAddress = ens.resolver(node);
+            bytes32 _node = node(addresses[i]);
+            address resolverAddress = ens.resolver(_node);
             if(resolverAddress != address(0x0)){
                 Resolver resolver = Resolver(resolverAddress);
-                string memory name = resolver.name(node);
+                string memory name = resolver.name(_node);
                 if(bytes(name).length == 0 ){
                     continue;
                 }
@@ -65,5 +65,25 @@ contract ReverseRecords {
 
             ret := keccak256(0, 40)
         }
+    }
+
+    /**
+     * Read only function to lookup addresses for a certain coinType
+     */
+    function getAddrs(string[] calldata names, uint coinType) external view returns (bytes[] memory r) {
+        r = new bytes[](names.length);
+        for(uint i = 0; i < names.length; i++) {
+            bytes32 namehash = Namehash.namehash(names[i]);
+            address resolverAddress = ens.resolver(namehash);
+            if(resolverAddress != address(0x0)){
+                Resolver forwardResolver = Resolver(resolverAddress);
+                bytes memory forwardAddress = forwardResolver.addr(namehash, coinType);
+                if(forwardAddress.length == 0) {
+                    continue;
+                }
+                r[i] = forwardAddress;
+            }
+        }
+        return r;
     }
 }

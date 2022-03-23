@@ -45,6 +45,7 @@
     "hardhat-deploy": "^0.11.0"
   },
   "dependencies": {
+    "@bchdomains/address-encoder": "^0.2.16",
     "@bchdomains/lns-contracts": "^0.0.10",
     "@ensdomains/buffer": "^0.0.10",
     "@ensdomains/dnssec-oracle": "^0.2.0",
