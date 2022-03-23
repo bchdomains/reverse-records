@@ -1,6 +1,6 @@
 {
   "name": "@bchdomains/reverse-records",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Returns multiple LNS reverse records with forward lookup check",
   "main": "index.js",
   "scripts": {
